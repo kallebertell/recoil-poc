@@ -1,75 +1,59 @@
-import React, { useEffect, useMemo, useState } from "react";
-import "./App.css";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { nameState, createFastNumberState } from "./atoms";
+import React from "react";
 import { executeAction } from "./executeAction";
+import {
+  useAudioEnabled,
+  useLocalMediaDispatcher,
+  useLocalMediaPermissionStatus,
+} from "./local-media/mediaManager";
+import { Sidebar } from "./layout/Sidebar";
+import { Button } from "@chakra-ui/react";
+import { useLayoutDispatcher } from "./layout/layoutManager";
+import { Video } from "./Video";
+import { FastTimer } from "./FastTimer";
 
-const logRerender = (name: string) =>
-  console.log(`${name} re-render. ${new Date().getTime()}`);
-
-const NameComponent = React.memo(() => {
-  logRerender("NameComponent");
-  const name = useRecoilValue(nameState);
-  return <section>Name: {name}</section>;
-});
-
-const NameInputter = React.memo(() => {
-  logRerender("NameInputter");
-  const [name, setName] = useRecoilState(nameState);
-  return (
-    <section>
-      Name input:{" "}
-      <input onChange={(e) => setName(e.target.value)} value={name} />
-    </section>
-  );
-});
-
-const Counter = ({
-  count,
-  setCount,
-}: {
-  count: number;
-  setCount: (val: number) => void;
-}) => {
-  logRerender("Counter");
-  return (
-    <section>
-      Count: {count} <button onClick={() => setCount(count + 1)}>+1</button>
-    </section>
-  );
-};
-
-const FastTimer = React.memo(({ idx }: { idx: number }) => {
-  const atom = useMemo(() => createFastNumberState(idx), [idx]);
-  const [fastNumber, setFastNumber] = useRecoilState(atom);
-
-  // Starts updating fastState every 16.66ms (60fps)
-  useEffect(() => {
-    setInterval(() => {
-      setFastNumber(new Date().getTime());
-    }, 16.66);
-  }, [setFastNumber]);
-
-  return <section>Fast: {fastNumber}</section>;
-});
+const Section: React.FC = ({ children }) => (
+  <section
+    style={{ padding: "2rem", margin: "2rem", border: "1px dashed #61dafb " }}
+  >
+    {children}
+  </section>
+);
 
 function App() {
-  logRerender("App");
-  const [count, setCount] = useState(10);
+  const { requestPermission, toggleAudio } = useLocalMediaDispatcher();
+  const permissionStatus = useLocalMediaPermissionStatus();
+  const audioEnabled = useAudioEnabled();
+
+  const { toggleSidebar } = useLayoutDispatcher();
 
   return (
-    <section className="App">
-      <NameComponent />
-      <NameInputter />
-      <Counter count={count} setCount={setCount} />
-      <button onClick={executeAction}>Execute async action</button>
+    <Section>
+      <Sidebar />
+      <Section>
+        <Video />
+      </Section>
+      <Section>
+        <div>Permission: {permissionStatus}</div>
+        <div>Audio enabled: {String(audioEnabled)}</div>
+        <Button
+          onClick={requestPermission}
+          disabled={permissionStatus !== "INITIAL"}
+        >
+          Request Video
+        </Button>
+        <Button ml={3} onClick={toggleAudio}>
+          Toggle Audio
+        </Button>
+      </Section>
+      <Section>
+        <Button onClick={toggleSidebar}>Toggle Sidebar</Button>
+      </Section>
+      <Section>
+        <Button onClick={executeAction}>Execute async action</Button>
+      </Section>
       <FastTimer idx={1} />
       <FastTimer idx={2} />
-      <FastTimer idx={3} />
-      <FastTimer idx={4} />
-      <FastTimer idx={5} />
-      <FastTimer idx={6} />
-    </section>
+    </Section>
   );
 }
 

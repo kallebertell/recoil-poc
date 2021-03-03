@@ -1,15 +1,14 @@
 
 import * as recoilPortal from "./RecoilPortal"
-import { nameState } from "./atoms";
+import { sidebarExpandedState } from "./layout/layoutManager"
 
 export async function executeAction() {
-  console.log("Running async execute action")
+  alert("Toggle sidebar state from outside of React after 1 sec delay!")
 
-  const result = await new Promise<string>(resolve => {
-    const name = recoilPortal.getRecoilExternalLoadable(nameState)
-    setTimeout(() => resolve(name.contents + "1"), 1009)
+  const result = await new Promise<boolean>(resolve => {
+    const isExpanded = recoilPortal.getRecoilExternalLoadable(sidebarExpandedState).getValue()
+    setTimeout(() => resolve(isExpanded), 1000)
   })
 
-  recoilPortal.setRecoilExternalState(nameState, result)
-  console.log("Execute action committed new state")
+  recoilPortal.setRecoilExternalState(sidebarExpandedState, !result)
 }
