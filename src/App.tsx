@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import "./App.css";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { nameState } from "./atoms";
+import { nameState, createFastNumberState } from "./atoms";
 import { executeAction } from "./executeAction";
 
 const logRerender = (name: string) =>
@@ -10,17 +10,17 @@ const logRerender = (name: string) =>
 const NameComponent = React.memo(() => {
   logRerender("NameComponent");
   const name = useRecoilValue(nameState);
-  return <div>Name: {name}</div>;
+  return <section>Name: {name}</section>;
 });
 
 const NameInputter = React.memo(() => {
   logRerender("NameInputter");
   const [name, setName] = useRecoilState(nameState);
   return (
-    <div>
+    <section>
       Name input:{" "}
       <input onChange={(e) => setName(e.target.value)} value={name} />
-    </div>
+    </section>
   );
 });
 
@@ -33,24 +33,43 @@ const Counter = ({
 }) => {
   logRerender("Counter");
   return (
-    <div>
+    <section>
       Count: {count} <button onClick={() => setCount(count + 1)}>+1</button>
-    </div>
+    </section>
   );
 };
+
+const FastTimer = React.memo(({ idx }: { idx: number }) => {
+  const atom = useMemo(() => createFastNumberState(idx), [idx]);
+  const [fastNumber, setFastNumber] = useRecoilState(atom);
+
+  // Starts updating fastState every 16.66ms (60fps)
+  useEffect(() => {
+    setInterval(() => {
+      setFastNumber(new Date().getTime());
+    }, 16.66);
+  }, [setFastNumber]);
+
+  return <section>Fast: {fastNumber}</section>;
+});
 
 function App() {
   logRerender("App");
   const [count, setCount] = useState(10);
 
   return (
-    <div className="App">
+    <section className="App">
       <NameComponent />
       <NameInputter />
       <Counter count={count} setCount={setCount} />
-
-      <button onClick={executeAction}>Execute action</button>
-    </div>
+      <button onClick={executeAction}>Execute async action</button>
+      <FastTimer idx={1} />
+      <FastTimer idx={2} />
+      <FastTimer idx={3} />
+      <FastTimer idx={4} />
+      <FastTimer idx={5} />
+      <FastTimer idx={6} />
+    </section>
   );
 }
 

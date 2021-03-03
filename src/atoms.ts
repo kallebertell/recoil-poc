@@ -6,3 +6,8 @@ export const nameState = atom({
   default: "George"
 })
 
+
+export const createFastNumberState = (idx: number) => atom({
+  key: `fastNumberState-${idx}`,
+  default: 0
+})
