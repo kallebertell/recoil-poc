@@ -17,7 +17,12 @@ const localMediaStreamState = atom<MediaStream | null>({
 
 const audioEnabledState = atom<boolean>({
   key: "audioEnabledState",
-  default: false
+  default: true
+})
+
+const videoEnabledState = atom<boolean>({
+  key: "videoEnabledState",
+  default: true
 })
 
 // Subscribable state
@@ -28,17 +33,21 @@ export const useLocalMediaStream = () => useRecoilValue(localMediaStreamState)
 
 export const useAudioEnabled = () => useRecoilValue(audioEnabledState)
 
+export const useVideoEnabled = () => useRecoilValue(videoEnabledState)
+
 // Dispatcher
 
 interface LocalMediaDispatcher {
   requestPermission: () => Promise<void>;
-  toggleAudio: () => void
+  requestAudioEnabled: (val: boolean) => void
+  requestVideoEnabled: (val: boolean) => void
 }
 
 export const useLocalMediaDispatcher = (): LocalMediaDispatcher => {
   const [, setPermissionStatus] = useRecoilState(permissionStatusState)
   const [mediaStream, setMediaStream] = useRecoilState(localMediaStreamState)
   const [audioEnabled, setAudioEnabled] = useRecoilState(audioEnabledState)
+  const [videoEnabled, setVideoEnabled] = useRecoilState(videoEnabledState)
 
   return useMemo<LocalMediaDispatcher>(() => ({
 
@@ -49,19 +58,26 @@ export const useLocalMediaDispatcher = (): LocalMediaDispatcher => {
         setMediaStream(mediaStream)
         setPermissionStatus("GRANTED")
         mediaStream.getAudioTracks()[0].enabled = audioEnabled;
+        mediaStream.getVideoTracks()[0].enabled = videoEnabled;
       } catch (err) {
         setPermissionStatus("ERROR")
       }
     },
 
-    toggleAudio() {
-      const newState = !audioEnabled
-      setAudioEnabled(newState)
+    requestAudioEnabled(val: boolean) {
+      setAudioEnabled(val)
 
       if (mediaStream) {
-        mediaStream.getAudioTracks()[0].enabled = newState;
+        mediaStream.getAudioTracks()[0].enabled = val;
+      }
+    },
+
+    requestVideoEnabled(val: boolean) {
+      setVideoEnabled(val)
+      if (mediaStream) {
+        mediaStream.getVideoTracks()[0].enabled = val;
       }
     }
 
-  }), [setPermissionStatus, mediaStream, setMediaStream, audioEnabled, setAudioEnabled])
+  }), [setPermissionStatus, mediaStream, setMediaStream, audioEnabled, setAudioEnabled, videoEnabled, setVideoEnabled])
 }

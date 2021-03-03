@@ -1,56 +1,51 @@
 import React from "react";
-import { executeAction } from "./executeAction";
-import {
-  useAudioEnabled,
-  useLocalMediaDispatcher,
-  useLocalMediaPermissionStatus,
-} from "./local-media/mediaManager";
+
 import { Sidebar } from "./layout/Sidebar";
 import { Button } from "@chakra-ui/react";
 import { useLayoutDispatcher } from "./layout/layoutManager";
-import { Video } from "./Video";
+import { Video } from "./local-media/Video";
 import { FastTimer } from "./FastTimer";
-
-const Section: React.FC = ({ children }) => (
-  <section
-    style={{ padding: "2rem", margin: "2rem", border: "1px dashed #61dafb " }}
-  >
-    {children}
-  </section>
-);
+import { Section } from "./Section";
+import { VideoControls } from "./local-media/VideoControls";
+import {
+  useRemoteBroadcastDispatcher,
+  useRemoveBroadcastActive,
+} from "./remote-broadcast/remoteBroadcastManager";
 
 function App() {
-  const { requestPermission, toggleAudio } = useLocalMediaDispatcher();
-  const permissionStatus = useLocalMediaPermissionStatus();
-  const audioEnabled = useAudioEnabled();
-
   const { toggleSidebar } = useLayoutDispatcher();
+  const remoteBroadcastActive = useRemoveBroadcastActive();
+  const {
+    startRemoteBroadcast,
+    stopRemoteBroadcast,
+  } = useRemoteBroadcastDispatcher();
 
   return (
     <Section>
       <Sidebar />
       <Section>
         <Video />
+        <VideoControls />
       </Section>
-      <Section>
-        <div>Permission: {permissionStatus}</div>
-        <div>Audio enabled: {String(audioEnabled)}</div>
-        <Button
-          onClick={requestPermission}
-          disabled={permissionStatus !== "INITIAL"}
-        >
-          Request Video
-        </Button>
-        <Button ml={3} onClick={toggleAudio}>
-          Toggle Audio
-        </Button>
-      </Section>
+
       <Section>
         <Button onClick={toggleSidebar}>Toggle Sidebar</Button>
+        <Button
+          ml={3}
+          onClick={startRemoteBroadcast}
+          disabled={remoteBroadcastActive}
+        >
+          Start remote broadcast
+        </Button>
+        <Button
+          ml={3}
+          onClick={stopRemoteBroadcast}
+          disabled={!remoteBroadcastActive}
+        >
+          Stop remote broadcast
+        </Button>
       </Section>
-      <Section>
-        <Button onClick={executeAction}>Execute async action</Button>
-      </Section>
+
       <FastTimer idx={1} />
       <FastTimer idx={2} />
     </Section>

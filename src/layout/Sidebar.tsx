@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { useLayoutDispatcher, useSidebarExpanded } from "./layoutManager";
 
-export const Sidebar = () => {
+export const Sidebar = React.memo(() => {
   const sidebarExpanded = useSidebarExpanded();
   const { closeSidebar } = useLayoutDispatcher();
   const onClose = useCallback(() => closeSidebar(), [closeSidebar]);
@@ -40,4 +40,4 @@ export const Sidebar = () => {
       </Drawer>
     </>
   );
-};
+});
