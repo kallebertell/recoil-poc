@@ -10,14 +10,13 @@ import {
   DrawerContent,
   DrawerCloseButton,
 } from "@chakra-ui/react";
-import {
-  useRequestSidebarExpanded,
-  useSidebarExpanded,
-} from "../../global-state/layout-state";
+import { useLayoutStore } from "../../zustand-state/layout-state";
 
 export const Sidebar = React.memo(() => {
-  const sidebarExpanded = useSidebarExpanded();
-  const requestSidebarExpanded = useRequestSidebarExpanded();
+  const sidebarExpanded = useLayoutStore((state) => state.sidebarExpanded);
+  const requestSidebarExpanded = useLayoutStore(
+    (state) => state.requestSidebarExpanded
+  );
 
   const onClose = useCallback(() => requestSidebarExpanded(false), [
     requestSidebarExpanded,
@@ -25,6 +24,7 @@ export const Sidebar = React.memo(() => {
 
   return (
     <>
+      <div>HMM: {String(sidebarExpanded)}</div>
       <Drawer isOpen={sidebarExpanded} placement="right" onClose={onClose}>
         <DrawerOverlay>
           <DrawerContent>

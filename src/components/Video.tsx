@@ -1,11 +1,13 @@
 import React, { useEffect, useRef } from "react";
-import { useRemoveBroadcastActive } from "../global-state/remote-broadcast-state";
-import { useLocalMediaStream } from "../global-state/local-media-state";
+import { useRemoteBroadcastStore } from "../zustand-state/remote-broadcast-state";
+import { useLocalMediaStore } from "../zustand-state/local-media-state";
 
 export const Video = React.memo(() => {
   const ref = useRef<HTMLVideoElement>(null);
-  const mediaStream = useLocalMediaStream();
-  const remoteBroadcastActive = useRemoveBroadcastActive();
+  const mediaStream = useLocalMediaStore((state) => state.mediaStream);
+  const remoteBroadcastActive = useRemoteBroadcastStore(
+    (state) => state.remoteBroadcastActive
+  );
 
   useEffect(() => {
     ref.current!.srcObject = mediaStream;
