@@ -1,24 +1,27 @@
 import React from "react";
 
-import { Sidebar } from "./layout/Sidebar";
 import { Button } from "@chakra-ui/react";
-import { useLayoutDispatcher } from "./layout/layoutManager";
-import { Video } from "./local-media/Video";
-import { FastTimer } from "./FastTimer";
-import { Section } from "./Section";
-import { VideoControls } from "./local-media/VideoControls";
+import { Sidebar } from "./components/layout/Sidebar";
+import { Video } from "./components/Video";
+import { FastTimer } from "./components/FastTimer";
+import { Section } from "./components/Section";
+import { VideoControls } from "./components/VideoControls";
 import {
-  useRemoteBroadcastDispatcher,
   useRemoveBroadcastActive,
-} from "./remote-broadcast/remoteBroadcastManager";
+  useStartRemoteBroadcast,
+  useStopRemoteBroadcast,
+} from "./global-state/remote-broadcast-state";
+import {
+  useRequestSidebarExpanded,
+  useSidebarExpanded,
+} from "./global-state/layout-state";
 
 function App() {
-  const { toggleSidebar } = useLayoutDispatcher();
+  const sidebarExpanded = useSidebarExpanded();
+  const requestSidebarExpanded = useRequestSidebarExpanded();
   const remoteBroadcastActive = useRemoveBroadcastActive();
-  const {
-    startRemoteBroadcast,
-    stopRemoteBroadcast,
-  } = useRemoteBroadcastDispatcher();
+  const startRemoteBroadcast = useStartRemoteBroadcast();
+  const stopRemoteBroadcast = useStopRemoteBroadcast();
 
   return (
     <Section>
@@ -29,7 +32,9 @@ function App() {
       </Section>
 
       <Section>
-        <Button onClick={toggleSidebar}>Toggle Sidebar</Button>
+        <Button onClick={() => requestSidebarExpanded(!sidebarExpanded)}>
+          Toggle Sidebar
+        </Button>
         <Button
           ml={3}
           onClick={startRemoteBroadcast}
