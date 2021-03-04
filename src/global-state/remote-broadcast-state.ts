@@ -20,12 +20,12 @@ const mediaEnabledBeforeBroadcastAtom = atom({
   }
 })
 
-// Subscribable state
+// Subscribable state hooks
 
 export const useRemoveBroadcastActive = () => useRecoilValue(remoteBroadcastActiveState)
 
 
-// State transitions
+// State transition hooks
 
 export const useStartRemoteBroadcast = () => {
   const requestVideoEnabled = useRequestVideoEnabled()

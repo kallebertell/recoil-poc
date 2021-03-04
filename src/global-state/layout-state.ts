@@ -3,19 +3,19 @@ import { atom, useRecoilState, useRecoilValue } from "recoil"
 
 // State atoms
 
-export const sidebarExpandedState = atom({
-  key: "sidebarExpandedState",
+const sidebarExpandedAtom = atom({
+  key: "sidebarExpanded",
   default: false
 })
 
-// Subscribable state
+// Subscribable state hooks
 
-export const useSidebarExpanded = () => useRecoilValue(sidebarExpandedState)
+export const useSidebarExpanded = () => useRecoilValue(sidebarExpandedAtom)
 
-// State transition
+// State transition hooks
 
 export const useRequestSidebarExpanded = () => {
-  const [, setSidebarExpanded] = useRecoilState(sidebarExpandedState)
+  const [, setSidebarExpanded] = useRecoilState(sidebarExpandedAtom)
 
   return useCallback(function requestSidebarOpen(val: boolean) {
     setSidebarExpanded(val)

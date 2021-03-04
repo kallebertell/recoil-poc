@@ -5,41 +5,41 @@ import { atom, useRecoilState, useRecoilValue } from "recoil"
 
 type PermissionStatus = "INITIAL" | "REQUESTING" | "GRANTED" | "ERROR"
 
-const permissionStatusState = atom<PermissionStatus>({
+const permissionStatusAtom = atom<PermissionStatus>({
   key: "permissionStatus",
   default: "INITIAL"
 })
 
-const localMediaStreamState = atom<MediaStream | null>({
+const localMediaStreamAtom = atom<MediaStream | null>({
   key: "localMediaStream",
   default: null
 })
 
-const audioEnabledState = atom<boolean>({
+const audioEnabledAtom = atom<boolean>({
   key: "audioEnabledState",
   default: true
 })
 
-const videoEnabledState = atom<boolean>({
+const videoEnabledAtom = atom<boolean>({
   key: "videoEnabledState",
   default: true
 })
 
 // Subscribable state hooks
 
-export const useLocalMediaPermissionStatus = () => useRecoilValue(permissionStatusState)
+export const useLocalMediaPermissionStatus = () => useRecoilValue(permissionStatusAtom)
 
-export const useLocalMediaStream = () => useRecoilValue(localMediaStreamState)
+export const useLocalMediaStream = () => useRecoilValue(localMediaStreamAtom)
 
-export const useAudioEnabled = () => useRecoilValue(audioEnabledState)
+export const useAudioEnabled = () => useRecoilValue(audioEnabledAtom)
 
-export const useVideoEnabled = () => useRecoilValue(videoEnabledState)
+export const useVideoEnabled = () => useRecoilValue(videoEnabledAtom)
 
 // State transitions hooks
 
 export const useRequestPermission = () => {
-  const [, setPermissionStatus] = useRecoilState(permissionStatusState)
-  const [, setMediaStream] = useRecoilState(localMediaStreamState)
+  const [, setPermissionStatus] = useRecoilState(permissionStatusAtom)
+  const [, setMediaStream] = useRecoilState(localMediaStreamAtom)
   const audioEnabled = useAudioEnabled()
   const videoEnabled = useVideoEnabled()
 
@@ -59,7 +59,7 @@ export const useRequestPermission = () => {
 
 export const useRequestAudioEnabled = () => {
   const mediaStream = useLocalMediaStream()
-  const [, setAudioEnabled] = useRecoilState(audioEnabledState)
+  const [, setAudioEnabled] = useRecoilState(audioEnabledAtom)
 
   return useCallback(function requestAudioEnabled(val: boolean) {
     setAudioEnabled(val)
@@ -72,7 +72,7 @@ export const useRequestAudioEnabled = () => {
 
 export const useRequestVideoEnabled = () => {
   const mediaStream = useLocalMediaStream()
-  const [, setVideoEnabled] = useRecoilState(videoEnabledState)
+  const [, setVideoEnabled] = useRecoilState(videoEnabledAtom)
 
   return useCallback(function requestVideoEnabled(val: boolean) {
     setVideoEnabled(val)
