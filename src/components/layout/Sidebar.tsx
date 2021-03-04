@@ -24,7 +24,6 @@ export const Sidebar = React.memo(() => {
 
   return (
     <>
-      <div>HMM: {String(sidebarExpanded)}</div>
       <Drawer isOpen={sidebarExpanded} placement="right" onClose={onClose}>
         <DrawerOverlay>
           <DrawerContent>
