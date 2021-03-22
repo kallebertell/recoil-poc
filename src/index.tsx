@@ -1,17 +1,19 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
-import { RecoilRoot } from "recoil";
-import { RecoilPortal } from "./RecoilPortal";
 import { ChakraProvider } from "@chakra-ui/react";
+import { createOvermind } from "overmind";
+import { Provider } from "overmind-react";
+import { config } from "./overmind";
+
+const overmind = createOvermind(config);
 
 ReactDOM.render(
   <React.StrictMode>
     <ChakraProvider>
-      <RecoilRoot>
+      <Provider value={overmind}>
         <App />
-        <RecoilPortal />
-      </RecoilRoot>
+      </Provider>
     </ChakraProvider>
   </React.StrictMode>,
   document.getElementById("root")

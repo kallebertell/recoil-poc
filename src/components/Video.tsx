@@ -1,11 +1,10 @@
 import React, { useEffect, useRef } from "react";
-import { useRemoveBroadcastActive } from "../global-state/remote-broadcast-state";
-import { useLocalMediaStream } from "../global-state/local-media-state";
 
 export const Video = React.memo(() => {
   const ref = useRef<HTMLVideoElement>(null);
-  const mediaStream = useLocalMediaStream();
-  const remoteBroadcastActive = useRemoveBroadcastActive();
+  // TODO: replace w/ Overmind state
+  const mediaStream = null;
+  const remoteBroadcastActive = false;
 
   useEffect(() => {
     ref.current!.srcObject = mediaStream;

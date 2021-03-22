@@ -6,22 +6,18 @@ import { Video } from "./components/Video";
 import { FastTimer } from "./components/FastTimer";
 import { Section } from "./components/Section";
 import { VideoControls } from "./components/VideoControls";
-import {
-  useRemoveBroadcastActive,
-  useStartRemoteBroadcast,
-  useStopRemoteBroadcast,
-} from "./global-state/remote-broadcast-state";
-import {
-  useRequestSidebarExpanded,
-  useSidebarExpanded,
-} from "./global-state/layout-state";
+import { useActions } from "./overmind";
 
 function App() {
-  const sidebarExpanded = useSidebarExpanded();
-  const requestSidebarExpanded = useRequestSidebarExpanded();
-  const remoteBroadcastActive = useRemoveBroadcastActive();
-  const startRemoteBroadcast = useStartRemoteBroadcast();
-  const stopRemoteBroadcast = useStopRemoteBroadcast();
+  // TODO: replace w/ Overmind
+  const sidebarExpanded = false;
+  const remoteBroadcastActive = false;
+  const startRemoteBroadcast = () => {};
+  const stopRemoteBroadcast = () => {};
+
+  const { layout: actions } = useActions();
+  // TODO: why are actions not typed?
+  const requestSidebarExpanded = (actions as any).requestSidebarExpanded;
 
   return (
     <Section>

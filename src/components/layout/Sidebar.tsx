@@ -10,22 +10,24 @@ import {
   DrawerContent,
   DrawerCloseButton,
 } from "@chakra-ui/react";
-import {
-  useRequestSidebarExpanded,
-  useSidebarExpanded,
-} from "../../global-state/layout-state";
+import { useActions, useAppState } from "../../overmind";
 
 export const Sidebar = React.memo(() => {
-  const sidebarExpanded = useSidebarExpanded();
-  const requestSidebarExpanded = useRequestSidebarExpanded();
+  const { layout } = useAppState();
+  const { layout: actions } = useActions();
 
-  const onClose = useCallback(() => requestSidebarExpanded(false), [
-    requestSidebarExpanded,
-  ]);
+  const onClose = useCallback(() => {
+    // TODO: Why is this not typed?
+    (actions as any).requestSidebarExpanded(false);
+  }, [actions]);
 
   return (
     <>
-      <Drawer isOpen={sidebarExpanded} placement="right" onClose={onClose}>
+      <Drawer
+        isOpen={layout.sidebarExpanded}
+        placement="right"
+        onClose={onClose}
+      >
         <DrawerOverlay>
           <DrawerContent>
             <DrawerCloseButton />
