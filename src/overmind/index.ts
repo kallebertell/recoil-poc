@@ -7,14 +7,20 @@ import {
   createReactionHook
 } from 'overmind-react'
 import { state } from './state'
+import * as actions from './actions'
 import * as layout from './layout'
+import * as localMedia from './local-media'
+import * as remoteBroadcast from './remote-broadcast'
 
 export const config = merge(
   {
-    state
+    state,
+    actions
   },
   namespaced({
-    layout
+    layout,
+    localMedia,
+    remoteBroadcast
   })
 )
 
@@ -24,9 +30,8 @@ export type Context = IContext<{
   effects: typeof config.effects
 }>
 
-
-
 export const useAppState = createStateHook<Context>()
 export const useActions = createActionsHook<Context>()
 export const useEffects = createEffectsHook<Context>()
 export const useReaction = createReactionHook<Context>()
+

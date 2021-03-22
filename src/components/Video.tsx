@@ -1,14 +1,27 @@
 import React, { useEffect, useRef } from "react";
+import { useAppState, useEffects } from "../overmind";
 
 export const Video = React.memo(() => {
   const ref = useRef<HTMLVideoElement>(null);
-  // TODO: replace w/ Overmind state
-  const mediaStream = null;
-  const remoteBroadcastActive = false;
+
+  const {
+    localMedia: { permissionStatus },
+  } = useAppState();
+
+  const {
+    localMedia: { mediaDevices },
+  } = useEffects();
+
+  const {
+    remoteBroadcast: { remoteBroadcastActive },
+  } = useAppState();
 
   useEffect(() => {
-    ref.current!.srcObject = mediaStream;
-  }, [mediaStream]);
+    if (permissionStatus === "GRANTED") {
+      console.log("Applying media stream to video element");
+      ref.current!.srcObject = mediaDevices.getMediaStream();
+    }
+  }, [permissionStatus, mediaDevices]);
 
   return (
     <>

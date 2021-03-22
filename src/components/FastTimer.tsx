@@ -1,15 +1,17 @@
 import React, { useEffect } from "react";
+import { useActions, useAppState } from "../overmind";
 
 export const FastTimer = React.memo(({ idx }: { idx: number }) => {
-  // TODO: replace w/ Overmind
-  const fastNumber = 1;
+  const appState = useAppState();
+  const actions = useActions();
 
   // Starts updating fastState every 16.66ms (60fps)
   useEffect(() => {
     setInterval(() => {
-      // TODO: update fast number here
+      // TODO: we're losing types
+      (actions.incrementFastNumber as Function)();
     }, 16.66);
-  }, []);
+  }, [actions]);
 
-  return <section>Fast: {fastNumber}</section>;
+  return <section>Fast: {appState.fastNumber}</section>;
 });

@@ -6,18 +6,19 @@ import { Video } from "./components/Video";
 import { FastTimer } from "./components/FastTimer";
 import { Section } from "./components/Section";
 import { VideoControls } from "./components/VideoControls";
-import { useActions } from "./overmind";
+import { useActions, useAppState } from "./overmind";
 
 function App() {
-  // TODO: replace w/ Overmind
-  const sidebarExpanded = false;
-  const remoteBroadcastActive = false;
-  const startRemoteBroadcast = () => {};
-  const stopRemoteBroadcast = () => {};
+  const {
+    layout: { sidebarExpanded },
+    remoteBroadcast: { remoteBroadcastActive },
+  } = useAppState();
 
-  const { layout: actions } = useActions();
   // TODO: why are actions not typed?
-  const requestSidebarExpanded = (actions as any).requestSidebarExpanded;
+  const {
+    layout: { requestSidebarExpanded },
+    remoteBroadcast: { startRemoteBroadcast, stopRemoteBroadcast },
+  } = useActions() as any;
 
   return (
     <Section>
@@ -47,8 +48,7 @@ function App() {
         </Button>
       </Section>
 
-      <FastTimer idx={1} />
-      <FastTimer idx={2} />
+      {/* <FastTimer idx={1} /> */}
     </Section>
   );
 }

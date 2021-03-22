@@ -2,16 +2,18 @@ import React from "react";
 
 import { Button } from "@chakra-ui/react";
 import { Section } from "./Section";
+import { useActions, useAppState } from "../overmind";
 
 export const VideoControls = () => {
-  // TODO: replace w/ Overmind
-  const permissionStatus = "INITIAL";
-  const videoEnabled = false;
-  const audioEnabled = false;
-  const requestPermission = () => {};
-  const requestAudioEnabled = (val: boolean) => {};
-  const requestVideoEnabled = (val: boolean) => {};
-  const remoteBroadcastActive = false;
+  const {
+    localMedia: { permissionStatus, videoEnabled, audioEnabled },
+    remoteBroadcast: { remoteBroadcastActive },
+  } = useAppState();
+
+  // TODO: why are actions not typed?
+  const {
+    localMedia: { requestPermission, requestAudioEnabled, requestVideoEnabled },
+  } = useActions() as any;
 
   return (
     <Section>

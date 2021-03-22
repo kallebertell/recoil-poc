@@ -1,5 +1,5 @@
-import { state } from './layoutState'
-import * as actions from './layoutActions'
+import { state } from './layout-state'
+import * as actions from './layout-actions'
 
 export {
   state,
